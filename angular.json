@@ -130,6 +130,41 @@
           }
         }
       }
+    },
+    "angular-http-stub-lib": {
+      "root": "projects/angular-http-stub-lib",
+      "sourceRoot": "projects/angular-http-stub-lib/src",
+      "projectType": "library",
+      "prefix": "ahs",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/angular-http-stub-lib/tsconfig.lib.json",
+            "project": "projects/angular-http-stub-lib/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/angular-http-stub-lib/src/test.ts",
+            "tsConfig": "projects/angular-http-stub-lib/tsconfig.spec.json",
+            "karmaConfig": "projects/angular-http-stub-lib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/angular-http-stub-lib/tsconfig.lib.json",
+              "projects/angular-http-stub-lib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular-http-stub"
