@@ -3,6 +3,6 @@
  */
 
 export * from './lib/angular-http-stub-lib.interceptor';
-export * from './lib/models/HttpStub';
+export * from './lib/http-stub/http-stub.service';
 
 export { MockConfig, MockConfigError, MissingDescriptorError, ExtraConfig } from 'fetch-stub/lib/types'

@@ -2,11 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RestService } from '../services/rest/rest.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpStubInterceptor, HttpStub, MockConfig } from 'angular-http-stub-lib';
+import { HttpStubInterceptor, MockConfig, HttpStubService } from 'angular-http-stub-lib';
 import expectedFileResponse from './mock/simpleFileResponse.json';
 
 describe(`HttpStubInterceptor`, () => {
   let service: RestService;
+  let httpStub: HttpStubService;
   let config: MockConfig = {
     "forward": false,
     "mockFolder": "./",
@@ -39,6 +40,7 @@ describe(`HttpStubInterceptor`, () => {
       imports: [HttpClientTestingModule],
       providers: [
         RestService,
+        HttpStubService,
         {
           provide: HTTP_INTERCEPTORS,
           useClass: HttpStubInterceptor,
@@ -48,10 +50,11 @@ describe(`HttpStubInterceptor`, () => {
     });
 
     service = TestBed.get(RestService);
+    httpStub = TestBed.get(HttpStubService);
   });
 
   it('should load HttpStub', () => {
-    HttpStub.load(config as any);
+    httpStub.load(config as any);
 
     const stubResponseBody = { description: 'good beer' };
 
@@ -63,7 +66,7 @@ describe(`HttpStubInterceptor`, () => {
   });
 
   it('should unload HttpStub', () => {
-    HttpStub.unload();
+    httpStub.unload();
 
     const stubResponseBody = { description: 'good beer' };
 
@@ -75,7 +78,7 @@ describe(`HttpStubInterceptor`, () => {
   });
 
   it('should load HttpStub and read JSON file', () => {
-    HttpStub.load(config as any);
+    httpStub.load(config as any);
 
     // Here fetch is in stub, I expect the mocked response
     service.simpleApiFile().subscribe(responseStub => {

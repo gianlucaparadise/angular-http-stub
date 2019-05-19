@@ -8,22 +8,23 @@ import {
 } from '@angular/common/http';
 import { Observable, from, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { HttpStub } from './models/HttpStub';
+// import { HttpStub } from './models/HttpStub';
 import { RequestMatcher } from 'fetch-stub/lib/RequestMatcher';
 import { RequestWrapped } from './models/RequestWrapped';
 import { MissingDescriptorError } from 'fetch-stub/lib/types';
+import { HttpStubService } from './http-stub/http-stub.service';
 
 @Injectable()
 export class HttpStubInterceptor implements HttpInterceptor {
 
-  constructor() { }
+  constructor(private httpStub: HttpStubService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      if (!HttpStub.isEnabled) {
+      if (!this.httpStub.isEnabled) {
         return next.handle(request);
       }
 
-        const requestMatcher: RequestMatcher = HttpStub.requestMatcher;
+        const requestMatcher: RequestMatcher = this.httpStub.requestMatcher;
 
         const requestWrapped = new RequestWrapped(request);
         const $response = from(requestMatcher.getResponse(requestWrapped));
