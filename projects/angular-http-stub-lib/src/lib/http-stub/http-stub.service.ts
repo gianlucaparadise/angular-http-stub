@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { RequestMatcher } from 'fetch-stub/lib/RequestMatcher';
 import { MockConfig, ExtraConfig, MockConfigError } from 'fetch-stub/lib/types';
 import { logError } from '../helpers';
-import { defaultResponseFileRetriever } from 'fetch-stub/lib/readers/DefaultFileReader';
+import { ResponseFileRetriever } from 'fetch-stub/lib/types';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class HttpStubService {
   isEnabled = false;
   requestMatcher = new RequestMatcher(null, null);
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   /**
 	 * Start mock server with given configuration
@@ -31,8 +32,7 @@ export class HttpStubService {
 
     // FIXME: fileretrievers are not working working
     const myExtraConfigs = Object.assign({
-      // responseFileRetriever: angularResponseFileRetriever
-      responseFileRetriever: defaultResponseFileRetriever
+      responseFileRetriever: this.responseFileRetriever
     } as ExtraConfig, extraConfigs);
 
     const requestMatcher = new RequestMatcher(config, myExtraConfigs);
@@ -49,4 +49,37 @@ export class HttpStubService {
     this.isEnabled = false;
     return true;
   }
+
+  responseFileRetriever: ResponseFileRetriever = async (mockFolder: string, responsePath: string): Promise<object> => {
+    const filePath = `${mockFolder}${responsePath}`;
+
+    try {
+      console.log(`Getting: ${filePath}`);
+      const result = await this.http.get(filePath).toPromise();
+      console.log(`Got:`);
+      console.log(result);
+      return result;
+    }
+    catch (err) {
+      console.log(`Got error:`);
+      logError(err);
+      throw err;
+    }
+  }
+
+  // responseFileRetriever: ResponseFileRetriever = (mockFolder: string, responsePath: string): Promise<object> => {
+  //   return new Promise((resolve, reject) => {
+  //     const filePath = `${mockFolder}${responsePath}`;
+
+  //     console.log(`Getting: ${filePath}`);
+  //     console.log(this.http);
+  //     this.http.get(filePath).subscribe(result => {
+        
+  //       console.log(`Got:`);
+  //       console.log(result);
+        
+  //       return resolve(result);
+  //     });
+  //   });
+  // }
 }

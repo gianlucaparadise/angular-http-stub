@@ -3,14 +3,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RestService } from '../services/rest/rest.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpStubInterceptor, MockConfig, HttpStubService } from 'angular-http-stub-lib';
-import expectedFileResponse from './mock/simpleFileResponse.json';
+import expectedFileResponse from '../../assets/mock/simpleFileResponse.json';
 
 describe(`HttpStubInterceptor`, () => {
   let service: RestService;
   let httpStub: HttpStubService;
   let config: MockConfig = {
     "forward": false,
-    "mockFolder": "./",
+    "mockFolder": "/assets/",
     "requests": [
       {
         "method": "GET",

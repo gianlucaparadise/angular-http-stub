@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpResponse,
 } from '@angular/common/http';
-import { Observable, from, of } from 'rxjs';
+import { Observable, from, of, throwError } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 // import { HttpStub } from './models/HttpStub';
 import { RequestMatcher } from 'fetch-stub/lib/RequestMatcher';
@@ -31,6 +31,8 @@ export class HttpStubInterceptor implements HttpInterceptor {
 
         return $response.pipe(
             switchMap(stringBody => {
+              console.log("StringBody");
+              console.log(stringBody);
                 if (stringBody) {
                     const body = JSON.parse(stringBody);
                     const response = new HttpResponse({ body: body });
@@ -38,7 +40,7 @@ export class HttpStubInterceptor implements HttpInterceptor {
                 }
         
                 if (!requestMatcher.config.forward) {
-                    return Observable.throw(new MissingDescriptorError("404 - Not Found"));
+                    return throwError(new MissingDescriptorError("404 - Not Found"));
                 }
         
                 //#region Forwarding request

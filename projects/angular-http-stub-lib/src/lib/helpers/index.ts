@@ -3,6 +3,7 @@ export function logError(obj: any) {
 		console.error("FetchStub - " + obj);
 	}
 	else {
+		console.error("FetchStub: ");
 		console.error(obj);
 	}
 }

@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build-lib": "ng build angular-http-stub-lib",
-    "test": "ng test",
+    "test": "ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
