@@ -20,33 +20,33 @@ export class HttpStubInterceptor implements HttpInterceptor {
   constructor(private httpStub: HttpStubService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      if (!this.httpStub.isEnabled) {
+    if (!this.httpStub.isEnabled) {
+      return next.handle(request);
+    }
+
+    const requestMatcher: RequestMatcher = this.httpStub.requestMatcher;
+
+    const requestWrapped = new RequestWrapped(request);
+    const $response = from(requestMatcher.getResponse(requestWrapped));
+
+    return $response.pipe(
+      switchMap(stringBody => {
+        console.log('StringBody');
+        console.log(stringBody);
+        if (stringBody) {
+          const body = JSON.parse(stringBody);
+          const response = new HttpResponse({ body });
+          return of(response);
+        }
+
+        if (!requestMatcher.config.forward) {
+          return throwError(new MissingDescriptorError('404 - Not Found'));
+        }
+
+        //#region Forwarding request
         return next.handle(request);
-      }
-
-        const requestMatcher: RequestMatcher = this.httpStub.requestMatcher;
-
-        const requestWrapped = new RequestWrapped(request);
-        const $response = from(requestMatcher.getResponse(requestWrapped));
-
-        return $response.pipe(
-            switchMap(stringBody => {
-              console.log("StringBody");
-              console.log(stringBody);
-                if (stringBody) {
-                    const body = JSON.parse(stringBody);
-                    const response = new HttpResponse({ body: body });
-                    return of(response);
-                }
-        
-                if (!requestMatcher.config.forward) {
-                    return throwError(new MissingDescriptorError("404 - Not Found"));
-                }
-        
-                //#region Forwarding request
-                return next.handle(request);
-                //#endregion
-            })
-        );
+        //#endregion
+      })
+    );
   }
 }

@@ -15,28 +15,28 @@ export class AppComponent implements OnInit {
   title = 'angular-http-stub';
 
   config: MockConfig = {
-    "forward": false,
-    "mockFolder": "/assets/",
-    "requests": [
+    forward: false,
+    mockFolder: '/assets/',
+    requests: [
       {
-        "method": "GET",
-        "path": {
-          "base": "/v2/beers",
-          "queries": {
-            "beer_name": "punk_ipa"
+        method: 'GET',
+        path: {
+          base: '/v2/beers',
+          queries: {
+            beer_name: 'punk_ipa'
           }
         },
-        "responseJson": {
-          "description": "good beer"
+        responseJson: {
+          description: 'good beer'
         }
       },
       {
-        "method": "GET",
-        "path": {
-          "base": "/simple/api/file"
+        method: 'GET',
+        path: {
+          base: '/simple/api/file'
         },
-        "responseJson": {},
-        "responseFile": "mock/simpleFileResponse.json"
+        responseJson: {},
+        responseFile: 'mock/simpleFileResponse.json'
       }
     ]
   };
@@ -47,17 +47,18 @@ export class AppComponent implements OnInit {
   }
 
   async testLocalFile() {
-    const result = await this.http.get("/assets/mock/simpleFileResponse.json").toPromise();
-    console.log("testLocalFile");
-    console.log(result);
+    this.http.get('/assets/mock/simpleFileResponse.json').subscribe((result) => {
+      console.log('testLocalFile');
+      console.log(result);
+    });
   }
 
   testRest() {
-    this.httpStub.load(this.config as any);
+    this.httpStub.load(this.config as any, this.http);
 
     // Here fetch is in stub, I expect the mocked response
     this.service.simpleApiFile().subscribe(responseStub => {
-      console.log("responseStub");
+      console.log('responseStub');
       console.log(responseStub);
     });
   }

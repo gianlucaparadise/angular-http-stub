@@ -13,7 +13,7 @@ export class RequestWrapped implements IRequest {
 
     constructor(request: HttpRequest<any>) {
         this.httpRequest = request;
-        
+
         this.method = request.method;
         this.url = request.url;
     }

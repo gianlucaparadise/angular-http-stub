@@ -26,8 +26,8 @@ export class HttpStubService {
     // }
 
     if (!config) {
-      logError("Config file not found.");
-      throw new MockConfigError("Config file not found.");
+      logError('Config file not found.');
+      throw new MockConfigError('Config file not found.');
     }
 
     // FIXME: fileretrievers are not working working
